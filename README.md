@@ -356,7 +356,7 @@ Exemplo de resposta:
 Exemplo de reposta:
 ```json
  {
-  ["Feedback CinePET", "Feedback CiPET", "Feedback ConfraPET"]
+  "items": ["Feedback CinePET", "Feedback CiPET", "Feedback ConfraPET"]
  }
 ```
 
@@ -374,7 +374,7 @@ Exemplo de resposta:
 Exemplo de reposta:
 ```json
  {
-  []
+  "items": []
  }
 ```
 
