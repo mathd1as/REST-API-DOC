@@ -82,7 +82,8 @@ Exemplo de resposta:
       "evento": "CiPET",
       "titulo": "Como descascar uma fruta",
       "duracao": 120,
-      "data": "16 de fevereiro de 2017"
+      "data": "16 de fevereiro de 2017",
+      "palestrante": "Moura Pai"
     }
   ]
  }
@@ -129,7 +130,7 @@ Exemplo de resposta:
 ```
 
 Recursos Privados
-=================
+-----------------
 Recursos privados necessitam de credenciais para ser acessados, pois envolve modificar a base de dados do serviço.
 
 Gerar Certificado
@@ -138,31 +139,72 @@ Gerar Certificado
 **URL**: `/certificados/gerador`<br>
 **Método**: POST<br>
 **Parâmetros**:<br>
+`ministrante` quem ministrou o evento.<br>
+`evento` tipo do evento.<br>
+`titulo` título do evento.<br>
+`duracao` quanto tempo o evento durou em minutos.<br
+`data` data que o evento foi realizado.<br>
+`participantes` uma lista contendo o nome e email das pessoas que participaram do evento.<br>
 **Retorno**:<br>
+uma lista com as informações dos certificados gerados.
+
+Exemplo de resposta:
+```json
+ {
+  "certificados": [
+    {
+      "nome": "Manoel Moura",
+      "evento": "CiPET",
+      "titulo": "Como descascar uma fruta",
+      "duracao": 120,
+      "data": "16 de fevereiro de 2017",
+      "palestrante": "Moura Pai"
+    }
+  ]
+ }
+```
 
 Deletar Certificado
 -------------------
-**Descrição**: <br>
+**Descrição**: remove um ou mais certificados da base de dados.<br>
 **URL**: `/certificados/gerador`<br>
 **Método**: DELETE<br>
 **Parâmetros**:<br>
+`titulo` título do evento presente no certificado.<br>
+`participantes` lista de contendo o nome participantes que deseja remover os certificados.<br>
 **Retorno**:<br>
+uma lista com as informações dos certificados restantes do evento.
+
+Exemplo de resposta:
+```json
+ {
+  "certificados": []
+ }
+```
 
 Adicionar Modelo
 ------------------
-**Descrição**: <br>
+**Descrição**: adiciona um modelo usado como base para gerar os certificados.<br>
 **URL**: `/certificados/modelos`<br>
 **Método**: POST<br>
 **Parâmetros**:<br>
+`nome` um nome para identificar o modelo.<br>
+`evento` o tipo de evento que ele está associado.<br>
+`modelo` uma string binária contendo o modelo.<br>
+`formato` o formato de arquivo do modelo.<br>
 **Retorno**:<br>
+um arquivo JSON vazio.
 
 Remover Modelo
 ----------------
-**Descrição**: <br>
+**Descrição**: remove um modelo presente na base de dados.<br>
 **URL**: `/certificados/modelos`<br>
 **Método**: DELETE<br>
 **Parâmetros**:<br>
+`nome` o nome que identifica o modelo.<br>
+`evento` o tipo de evento que ele está associado.<br>
 **Retorno**:<br>
+um arquivo JSON vazio.
 
 Notificação
 ===========
@@ -170,101 +212,188 @@ Notifica aos membros do grupo PETComp as atividades pendendes a serem realizadas
 
 Adicionar Membro
 ----------------
-**Descrição**:<br>
+**Descrição**: adiciona um novo membro na base de dados com informações necessárias para poder notificá-lo caso necessário. Se invocado com o mesmo `ra` sobrescreve os dados na base de dados.<br>
 **URL**: `/notificador/membros`<br>
 **Método**: POST<br>
 **Parâmetros**:<br>
+`ra` registro acadêmico do novo membro para identificá-lo de forma única.<br>
+`nome` nome do novo membro.<br>
+`email` email do novo membro.<br>
 **Retorno**:<br>
+o identificador gerado para aquele membro.
 
 Remover Membro 
 --------------
-**Descrição**:<br>
+**Descrição**: remove um membro da base de dados caso ele não faça mais parte do grupo.<br>
 **URL**: `/notificador/membros`<br>
 **Método**: DELETE<br>
 **Parâmetros**:<br>
+`ra` registro acadêmico do ex-membro.<br>
 **Retorno**:<br>
+um JSON vazio.
 
 Adicionar Projeto
 -----------------
-**Descrição**:<br>
+**Descrição**: adiciona um projeto a base de dados, que poderá ser usado como forma de notificar um grupo de membros.<br>
 **URL**: `/notificador/projetos`<br>
 **Método**: POST<br>
 **Parâmetros**:<br>
+`nome` nome do novo projeto.<br>
 **Retorno**:<br>
+o identificador gerado para aquele projeto.
 
 Remover Projeto 
 ---------------
-**Descrição**:<br>
+**Descrição**: remove um projeto descontinuado ou finalizado da base de dados.<br>
 **URL**: `/notificador/projetos`<br>
 **Método**: DELETE<br>
 **Parâmetros**:<br>
+`nome` nome do projeto que será removido.<br>
 **Retorno**:<br>
+um JSON vazio.
 
 Agendar Atividade
 -----------------
-**Descrição**: após um evento é necessário gerar os certificados para serem armazenados na base de dados.<br>
+**Descrição**: agenda uma atividade que será notificada aos responsáveis por ela.<br>
 **URL**: `/notificador/atividades`<br>
 **Método**: POST<br>
 **Parâmetros**:<br>
+`nome` nome da atividade.<br>
+`descricao` uma descrição sobre a atividade.<br>
+`projeto` o projeto que a atividade faz parte<br>
+`data-inicio` quando a atividade começará.<br>
+`data-fim` quando a atividade encerrará.<br>
+`metodo` uma lista contendo os métodos de notificação que serão usados.<br>
+`prioridade` um nível de prioridade para que a atividade seja realizado dentro do prazo.<br>
+`responsaveis` uma lista contendo os membros responsáveis pela atividade. Caso o nome do projeto seja passado, todos os responsáveis por aquele projeto serão notificados.<br>
 **Retorno**:<br>
+um identificador gerado para aquela atividade.
 
 Remover Atividade
 -----------------
-**Descrição**: após um evento é necessário gerar os certificados para serem armazenados na base de dados.<br>
+**Descrição**: cancela uma atividade agendada para ser notificada.<br>
 **URL**: `/notificador/atividades`<br>
 **Método**: DELETE<br>
 **Parâmetros**:<br>
+`nome` registro acadêmico do novo membro para identificá-lo de forma única.<br>
 **Retorno**:<br>
+um JSON vazio.
 
 Editar Atividade
 ----------------
-**Descrição**: após um evento é necessário gerar os certificados para serem armazenados na base de dados.<br>
+**Descrição**: Altera alguma informação de uma atividade criada.<br>
 **URL**: `/notificador/atividades`<br>
 **Método**: PUT<br>
 **Parâmetros**:<br>
+Os mesmos utilizados para criar uma atividade, porém todos são opcionais.
+`id` o identificador da atividade.<br>
+`nome` nome da atividade.<br>
+`projeto` o projeto que a atividade faz parte.<br>
+`descricao` uma descrição sobre a atividade.<br>
+`data-inicio` quando a atividade começará.<br>
+`data-fim` quando a atividade encerrará.<br>
+`metodo` uma lista contendo os métodos de notificação que serão usados.<br>
+`prioridade` um nível de prioridade para que a atividade seja realizado dentro do prazo.<br>
+`responsaveis` uma lista contendo os membros responsáveis pela atividade. Caso o nome do projeto seja passado, todos os responsáveis por aquele projeto serão notificados.<br>
 **Retorno**:<br>
+um JSON contendo os valores dos dados antigos comparando com os novos.
+
+Exemplo de resposta:
+```json
+ {
+  "nome-antigo": "Reunião Urgente",
+  "nome-novo": "Reunião Não Mais Urgente",
+  "prioridade-antiga": "alta",
+  "prioridade-nova": "baixa"
+ }
+```
 
 Listar Atividades
 -----------------
-**Descrição**: após um evento é necessário gerar os certificados para serem armazenados na base de dados.<br>
-**URL**: `/notificador/{por}/listar`<br>
-**Método**: POST<br>
+**Descrição**: listar todas as atividades agendadas que satisfação alguns critérios de filtragem.<br>
+**URL**: `/notificador/listar`<br>
+**Método**: GET<br>
 **Parâmetros**:<br>
+`membro` uma lista com os membros que devem fazer parte das atividades que serão listadas.<br>
+`projeto` uma lista com os projetos que devem fazer parte das atividades que serão listadas.<br>
+`prioridade` uma lista de prioridade válidas das atividades que serão listadas.<br>
 **Retorno**:<br>
+uma lista com as informaçõs das atividades encontradas.
 
-## Atas
-Gerar as atas das reuniões do PETComp
+Exemplo de reposta:
+```json
+ {
+  "id": "8d189j21",
+  "nome": "Reunião Não Mais Urgente",
+  "descricao": "reunião para discutir sobre a compra de bolachas",
+  "data-inicio": "Fri, 31 Jan 2042 21:01:05 +0000",
+  "data-fim": "Fri, 31 Jan 2042 22:01:05 +0000",
+  "metodo": [
+   "email"
+  ],
+  "prioridade": "baixa",
+  "responsaveis": [
+   "Joaquim Q.", "Tomas", "Memória"
+  ]
+ }
+```
+
+Atas
+====
+Gerar as atas das reuniões do PETComp.
 
 Adicionar Pautas
 ----------------
-**Descrição**:<br>
+**Descrição**: adicionar algum item de pauta a ser discutido na reunião.<br>
 **URL**: `/atas/pautas`<br>
 **Método**: POST<br>
 **Parâmetros**:<br>
+`item` uma lista contendo o título dos items de pauta.<br>
 **Retorno**:<br>
+os items de pauta atuais.
 
-Editar Pautas
+Exemplo de resposta:
+Exemplo de reposta:
+```json
+ {
+  ["Feedback CinePET", "Feedback CiPET", "Feedback ConfraPET"]
+ }
+```
+
+Remover Pautas
 -------------
-**Descrição**:<br>
+**Descrição**: remover algum item de presente na pauta.<br>
 **URL**: `/atas/pautas`<br>
-**Método**: PUT<br>
+**Método**: DELETE<br>
 **Parâmetros**:<br>
+`item` uma lista contendo o título dos items de pauta.<br>
 **Retorno**:<br>
+os items de pauta restantes.
+
+Exemplo de resposta:
+Exemplo de reposta:
+```json
+ {
+  []
+ }
+```
 
 Criar Ata
 -------------------
-**Descrição**:<br>
+**Descrição**: acessa um modelo que será usado para escrever a ata.<br>
 **URL**: `/atas/modelos`<br>
 **Método**: GET<br>
-**Parâmetros**:<br>
+**Parâmetros**: Nenhum<br>
 **Retorno**:<br>
+A ser decidido.
 
 Submeter Ata
 ----------------
-**Descrição**:<br>
+**Descrição**: submete uma ata após redigida para correção, que poderá ser utilizada para extrair informações para gerar agendar atividades automaticamente.<br>
 **URL**: `/atas/submissoes`<br>
 **Método**: POST<br>
 **Parâmetros**:<br>
+A ser decidido.
 **Retorno**:<br>
-
+A ser decidido.
 
